@@ -23,7 +23,7 @@ const Span = styled.div`
   color: ${({ theme }) => theme.text_secondary + 90};
 `;
 
-const Signin = () => {
+const SignIn = () => {
   return (
     <Container>
       <div>
@@ -39,4 +39,4 @@ const Signin = () => {
   )
 }
 
-export default Signin
+export default SignIn
