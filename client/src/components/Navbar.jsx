@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Link as LinkR, NavLink } from 'react-router-dom';
-import { MenuRounded } from '@mui/icons-material';
-import { Avatar } from '@mui/material';
+import React, { useState } from "react";
+import styled from "styled-components";
+import LogoImg from "../utils/Images/Logo.png";
+import { Link as LinkR, NavLink } from "react-router-dom";
+import { MenuRounded } from "@mui/icons-material";
+import { Avatar } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/reducer/userSlice";
 
 const Nav = styled.div`
   background-color: ${({ theme }) => theme.bg};
@@ -17,7 +20,6 @@ const Nav = styled.div`
   color: white;
   border-bottom: 1px solid ${({ theme }) => theme.text_secondary + 20};
 `;
-
 const NavContainer = styled.div`
   width: 100%;
   max-width: 1400px;
@@ -28,7 +30,6 @@ const NavContainer = styled.div`
   justify-content: space-between;
   font-size: 1rem;
 `;
-
 const NavLogo = styled(LinkR)`
   width: 100%;
   display: flex;
@@ -40,11 +41,9 @@ const NavLogo = styled(LinkR)`
   text-decoration: none;
   color: ${({ theme }) => theme.black};
 `;
-
 const Logo = styled.img`
   height: 42px;
 `;
-
 const Mobileicon = styled.div`
   color: ${({ theme }) => theme.text_primary};
   display: none;
@@ -94,7 +93,6 @@ const UserContainer = styled.div`
   padding: 0 6px;
   color: ${({ theme }) => theme.primary};
 `;
-
 const TextButton = styled.div`
   text-align: end;
   color: ${({ theme }) => theme.secondary};
@@ -107,9 +105,7 @@ const TextButton = styled.div`
   }
 `;
 
-const MobileMenu = styled.ul.withConfig({
-    shouldForwardProp: (prop) => prop !== 'isopen',  
-})`
+const MobileMenu = styled.ul`
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -123,50 +119,51 @@ const MobileMenu = styled.ul.withConfig({
   top: 80px;
   right: 0;
   transition: all 0.6s ease-in-out;
-  transform: ${({ isopen }) =>
-    isopen ? "translateY(0)" : "translateY(-100%)"};
+  transform: ${({ isOpen }) =>
+    isOpen ? "translateY(0)" : "translateY(-100%)"};
   border-radius: 0 0 20px 20px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-  opacity: ${({ isopen }) => (isopen ? "100%" : "0")};
-  z-index: ${({ isopen }) => (isopen ? "1000" : "-1000")};
+  opacity: ${({ isOpen }) => (isOpen ? "100%" : "0")};
+  z-index: ${({ isOpen }) => (isOpen ? "1000" : "-1000")};
 `;
 
-const Navbar = () => {
-    const [isopen, setisOpen] = useState(false);
+const Navbar = ({ currentUser }) => {
+  const dispatch = useDispatch();
+  const [isOpen, setisOpen] = useState(false);
   return (
     <Nav>
-        <NavContainer>
-            <Mobileicon onClick={() => setisOpen(!isopen)}>
-                <MenuRounded sx={{ color: 'inherit' }} />
-            </Mobileicon>
-            <NavLogo to="/">
-                <Logo />
-                Fittrack
-            </NavLogo>
+      <NavContainer>
+        <Mobileicon onClick={() => setisOpen(!isOpen)}>
+          <MenuRounded sx={{ color: "inherit" }} />
+        </Mobileicon>
+        <NavLogo to="/">
+          <Logo src={LogoImg} />
+          Fittrack
+        </NavLogo>
 
-            <MobileMenu isopen={isopen}>
-                <Navlink to="/">Dashboard</Navlink>
-                <Navlink to="/workouts">Workouts</Navlink>
-                <Navlink to="/tutorials">Tutorials</Navlink>
-                <Navlink to="/blogs">Blogs</Navlink>
-                <Navlink to="/contact">Contact</Navlink>
-            </MobileMenu>
+        <MobileMenu isOpen={isOpen}>
+          <Navlink to="/">Dashboard</Navlink>
+          <Navlink to="/workouts">Workouts</Navlink>
+          <Navlink to="/tutorials">Tutorials</Navlink>
+          <Navlink to="/blogs">Blogs</Navlink>
+          <Navlink to="/contact">Contact</Navlink>
+        </MobileMenu>
 
-            <NavItems>
-                <Navlink to="/">Dashboard</Navlink>
-                <Navlink to="/workouts">Workouts</Navlink>
-                <Navlink to="/tutorials">Tutorials</Navlink>
-                <Navlink to="/blogs">Blogs</Navlink>
-                <Navlink to="/contact">Contact</Navlink>
-            </NavItems>
+        <NavItems>
+          <Navlink to="/">Dashboard</Navlink>
+          <Navlink to="/workouts">Workouts</Navlink>
+          <Navlink to="/tutorials">Tutorials</Navlink>
+          <Navlink to="/blogs">Blogs</Navlink>
+          <Navlink to="/contact">Contact</Navlink>
+        </NavItems>
 
-            <UserContainer>
-                <Avatar />
-                    <TextButton>Logout</TextButton>
-            </UserContainer>
-        </NavContainer>
+        <UserContainer>
+          <Avatar src={currentUser?.img}>{currentUser?.name[0]}</Avatar>
+          <TextButton onClick={() => dispatch(logout())}>Logout</TextButton>
+        </UserContainer>
+      </NavContainer>
     </Nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
